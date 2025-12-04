@@ -5,7 +5,13 @@ Hola! Este es un juego que estoy creando por mi cuenta. Es una recreación de un
 Mania es un plataformero bien simple, y la única meta es llegar al final con la mayor cantidad de chocolates posibles.
 No hay mucho más misterio detrás de eso. Creo...
 
-# Preguntas Frecuentes
+# Preguntas Frecuentes (?)
+
+### Dónde está X funcionalidad?
+En mi corazón... si es que aún no está disponible o siendo trabajada, obvio.
+
+### Por qué decidiste usar el Español?
+No lo sé.
 
 ### Cuánto falta para el Open Test?
 Bastante.
