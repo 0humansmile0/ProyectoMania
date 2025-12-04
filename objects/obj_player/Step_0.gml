@@ -1,0 +1,9 @@
+OnGround();
+Keys();
+Moving();
+Coyote();
+Jumping();
+FuckFractions();
+FinalMove();
+ObstacleHandling();
+SpriteHandling();
