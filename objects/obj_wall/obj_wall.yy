@@ -38,5 +38,5 @@
     "name":"spr_mask1_32",
     "path":"sprites/spr_mask1_32/spr_mask1_32.yy",
   },
-  "visible":false,
+  "visible":true,
 }

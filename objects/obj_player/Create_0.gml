@@ -1,8 +1,6 @@
 #macro SOLID_INTERFACE [layer_tilemap_get_id("Solid"), obj_solid]
 #macro OBSTACLE_INTERFACE obj_alive
-character_init()
-
-//lhc_activate();
+#macro hunger_max 127
 
 function Initialize() {
 	expected_fps = 60;
@@ -16,11 +14,7 @@ function Initialize() {
 	
 	x_start = x;
 	y_start = y;
-	
-	attempts = 0;
-	
-	//initial_pos_x = x;
-	//initial_pos_y = y;
+	hunger_start = hunger;
 
 	mspd = 3;
 	jspd = 9;
@@ -28,34 +22,15 @@ function Initialize() {
 	moveL = 0;
 	moveR = 0;
 	moveJ = 0;
+	moveD = 0;
 
 	coyote_time = 1;
-	coyote_time_max = 4;
-	
-	//gravity_direction = 270;
-	//d_gravity = grav;
+	coyote_time_max = 5;
 }
 
-// Add collision with Interface ISolid.
-//lhc_add(SOLID_INTERFACE, function() {
-//    // Check for horizontal collision.
-//    if (lhc_collision_horizontal()) {
-//        // Stop further x-axis movement this step...
-//        lhc_stop_x();
-//        // AND stop our x velocity.
-//        hsp = 0;
-//		hsp_final = 0;
-//    }
-
-//    // Check for vertical collision.
-//    if (lhc_collision_vertical()) {
-//        // Stop further y-axis movement this step...
-//        lhc_stop_y();
-//        // AND stop our y velocity.
-//        vsp = 0;
-//		vsp_final = 0;
-//    }
-//});
+function Update() {
+	window_set_caption(string("i am {0}% hungry. i failed {1} times.", (hunger/hunger_max)*100, attempts));
+}
 
 function OnGround() {
 	if (place_meeting(x,y+1,SOLID_INTERFACE)) {
@@ -67,6 +42,7 @@ function Keys() {
 	moveL = keyboard_check(vk_left) || keyboard_check(ord("A"));
 	moveR = keyboard_check(vk_right) || keyboard_check(ord("D"));
 	moveJ = keyboard_check(vk_up) || keyboard_check(vk_space);
+	moveD = keyboard_check(vk_down) || keyboard_check(ord("S"));
 	moveB = keyboard_check_pressed(vk_backspace) || keyboard_check_pressed(ord("R"));
 }
 
@@ -95,6 +71,13 @@ function Jumping() {
 	if (vsp < 0) && (!moveJ) {
 		vsp = max(vsp, -jspd/4);
 	}
+	
+	//Cancelling
+	if moveD and !OnGround() {
+		grav += 0.06;
+	} else {
+		grav = 0.3;
+	}
 }
 
 function FuckFractions() {
@@ -108,33 +91,37 @@ function FuckFractions() {
 }
 
 function FinalMove() {
-	if (place_meeting(x+hsp_final,y,SOLID_INTERFACE))
-	{
+	if (place_meeting(x+hsp_final,y,SOLID_INTERFACE)) {
 	    var inc = sign(hsp_final);
 	    while (!place_meeting(x+inc,y,SOLID_INTERFACE)) x+= inc;
 	    hsp_final = 0;
 	    hsp = 0;
 	}
  
-	if (place_meeting(x,y+vsp_final,SOLID_INTERFACE))
-	{
+	if (place_meeting(x,y+vsp_final,SOLID_INTERFACE)) {
 	    var inc = sign(vsp_final);
 	    while (!place_meeting(x,y+inc,SOLID_INTERFACE)) y+= inc;
 	    vsp_final = 0;
 	    vsp = 0;
 	}
-	//final move
-	x += hsp_final
-	y += vsp_final;
+	
+	//Final move
+	x += d(hsp_final)
+	y += d(vsp_final);
 }
 
 function ObstacleHandling() {
-	if (place_meeting(x,y,OBSTACLE_INTERFACE)) or (moveB) or (y > room_height + 32)  {
+	if (place_meeting(x,y,OBSTACLE_INTERFACE)) or (moveB) or (y > room_height + 48)  {
 		attempts++;
 		x = x_start;
 		y = y_start;
-		audio_play_sound(snd_lose,0,false)
-		//TODO: play sound for death
+		hunger = hunger_start;
+		with obj_choco {
+			visible = true;
+		}
+		audio_play_sound(snd_lose,0,false);
+		Update();
+		//DONE: play sound for death
 	}
 }
 
@@ -157,7 +144,10 @@ function SpriteHandling() {
 		}
 	}
 	
+	image_speed = d(1);
+	
 	depth = -9999999;
 }
 
 Initialize();
+Update();

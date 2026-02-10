@@ -1,5 +1,5 @@
 function character_init() {
-	globalvar CHARACTER;
+	globalvar CHARACTER, attempts, hunger;
 	CHARACTER = {
 		//properties: {
 		//	walk_speed: 1.7,
@@ -13,6 +13,8 @@ function character_init() {
 			current_level: [-1,-1]
 		}
 	}
+	attempts = 0;
+	hunger = 0;
 }
 
 function character_set_player(_player) {

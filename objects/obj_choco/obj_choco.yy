@@ -1,7 +1,9 @@
 {
   "$GMObject":"",
   "%Name":"obj_choco",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},"eventNum":0,"eventType":4,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"obj_choco",
   "overriddenProperties":[],
@@ -9,10 +11,7 @@
     "name":"Alive",
     "path":"folders/Main/Mania Game/Obstacles/Alive.yy",
   },
-  "parentObjectId":{
-    "name":"obj_alive",
-    "path":"objects/obj_alive/obj_alive.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -31,8 +30,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_fire_a1",
-    "path":"sprites/spr_fire_a1/spr_fire_a1.yy",
+    "name":"spr_choco_a1",
+    "path":"sprites/spr_choco_a1/spr_choco_a1.yy",
   },
   "spriteMaskId":{
     "name":"spr_hitbox_32",
