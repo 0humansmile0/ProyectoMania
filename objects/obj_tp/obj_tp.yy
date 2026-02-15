@@ -37,6 +37,9 @@
     "name":"spr_tp_a1",
     "path":"sprites/spr_tp_a1/spr_tp_a1.yy",
   },
-  "spriteMaskId":null,
+  "spriteMaskId":{
+    "name":"spr_tp_mask",
+    "path":"sprites/spr_tp_mask/spr_tp_mask.yy",
+  },
   "visible":false,
 }

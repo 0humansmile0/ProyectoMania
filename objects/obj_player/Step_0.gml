@@ -1,5 +1,6 @@
 OnGround();
 Keys();
+DashMechanic();
 Moving();
 Coyote();
 Jumping();

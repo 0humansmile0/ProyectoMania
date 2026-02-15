@@ -1,6 +1,7 @@
 #macro SOLID_INTERFACE [layer_tilemap_get_id("Solid"), obj_solid]
 #macro OBSTACLE_INTERFACE obj_alive
-#macro hunger_max 127
+#macro hunger_max 128
+//TODO: make double tap behaviour to "dash" (for older map compatibility)
 
 function Initialize() {
 	expected_fps = 60;
@@ -26,10 +27,22 @@ function Initialize() {
 
 	coyote_time = 1;
 	coyote_time_max = 5;
+	
+	enum DASH_DIR {
+		NONE,
+		LEFT,
+		RIGHT
+	}
+	dash_tap_frames = 12;
+	dash_tap_timer = 0;
+	dash_last_direction = DASH_DIR.NONE;
+	dash_is_dashing = false;
+	dash_move = 0;
+	dash_duration = 16;
 }
 
 function Update() {
-	window_set_caption(string("i am {0}% hungry. i failed {1} times.", (hunger/hunger_max)*100, attempts));
+	window_set_caption(string("tengo el {0}% de los chocos, he fallado {1} veces", (hunger/hunger_max)*100, attempts));
 }
 
 function OnGround() {
@@ -39,16 +52,20 @@ function OnGround() {
 }
 
 function Keys() {
-	moveL = keyboard_check(vk_left) || keyboard_check(ord("A"));
-	moveR = keyboard_check(vk_right) || keyboard_check(ord("D"));
-	moveJ = keyboard_check(vk_up) || keyboard_check(vk_space);
-	moveD = keyboard_check(vk_down) || keyboard_check(ord("S"));
-	moveB = keyboard_check_pressed(vk_backspace) || keyboard_check_pressed(ord("R"));
+	moveL = keyboard_check(vk_left)
+	moveR = keyboard_check(vk_right)
+	moveJ = keyboard_check(vk_up)
+	moveD = keyboard_check(vk_down)
+	moveB = keyboard_check_pressed(ord("R"));
 }
 
 function Moving() {
-	hsp = (moveR - moveL) * mspd;
-	if (vsp<10) vsp += grav;
+	hsp = ((moveR - moveL) * mspd);
+	if moveD {
+		vsp += grav;
+	} else {
+		if (vsp<10) vsp += grav;
+	}
 }
 
 function Coyote() {
@@ -108,6 +125,33 @@ function FinalMove() {
 	//Final move
 	x += d(hsp_final)
 	y += d(vsp_final);
+}
+
+function DashMechanic() {
+	if (dash_tap_timer > 0) dash_tap_timer--;
+	if (dash_duration > 0) dash_duration--;
+	
+	if (keyboard_check_pressed(vk_right)) {
+		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.RIGHT) and (dash_duration == 0 && !place_meeting(x+16+mspd,y,SOLID_INTERFACE)) {
+			x+=16;
+			x=round(x/16)*16;
+			dash_duration = 45;
+		}
+		
+		dash_tap_timer = dash_tap_frames;
+		dash_last_direction = DASH_DIR.RIGHT;
+	}
+	
+	if (keyboard_check_pressed(vk_left)) {
+		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.LEFT) and (dash_duration == 0 && !place_meeting(x-16+mspd,y,SOLID_INTERFACE)) {
+			x-=16;
+			x=round(x/16)*16;
+			dash_duration = 45;
+		}
+		
+		dash_tap_timer = dash_tap_frames;
+		dash_last_direction = DASH_DIR.LEFT;
+	}
 }
 
 function ObstacleHandling() {
