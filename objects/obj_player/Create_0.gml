@@ -1,7 +1,7 @@
 #macro SOLID_INTERFACE [layer_tilemap_get_id("Solid"), obj_solid]
 #macro OBSTACLE_INTERFACE obj_alive
 #macro hunger_max 128
-//TODO: make double tap behaviour to "dash" (for older map compatibility)
+//DONE: make double tap behaviour to "dash" (for older map compatibility)
 
 function Initialize() {
 	expected_fps = 60;
@@ -33,12 +33,13 @@ function Initialize() {
 		LEFT,
 		RIGHT
 	}
-	dash_tap_frames = 12;
+	dash_tap_frames = 10;
 	dash_tap_timer = 0;
 	dash_last_direction = DASH_DIR.NONE;
 	dash_is_dashing = false;
 	dash_move = 0;
 	dash_duration = 16;
+	dash_px = 32;
 }
 
 function Update() {
@@ -132,9 +133,9 @@ function DashMechanic() {
 	if (dash_duration > 0) dash_duration--;
 	
 	if (keyboard_check_pressed(vk_right)) {
-		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.RIGHT) and (dash_duration == 0 && !place_meeting(x+16+mspd,y,SOLID_INTERFACE)) {
-			x+=16;
-			x=round(x/16)*16;
+		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.RIGHT) and (dash_duration == 0 && !place_meeting(x+dash_px+mspd,y,SOLID_INTERFACE)) {
+			x+=dash_px;
+			x=round(x/dash_px)*dash_px;
 			dash_duration = 45;
 		}
 		
@@ -143,9 +144,9 @@ function DashMechanic() {
 	}
 	
 	if (keyboard_check_pressed(vk_left)) {
-		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.LEFT) and (dash_duration == 0 && !place_meeting(x-16+mspd,y,SOLID_INTERFACE)) {
-			x-=16;
-			x=round(x/16)*16;
+		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.LEFT) and (dash_duration == 0 && !place_meeting(x-dash_px+mspd,y,SOLID_INTERFACE)) {
+			x-=dash_px;
+			x=round(x/dash_px)*dash_px;
 			dash_duration = 45;
 		}
 		

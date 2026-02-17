@@ -10,7 +10,7 @@
   "compression":3,
   "compressionQuality":6,
   "conversionMode":0,
-  "duration":2054.39,
+  "duration":60.216007,
   "exportDir":"",
   "name":"mus_mania",
   "parent":{
@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"mus_mania.mp3",
-  "volume":0.5,
+  "volume":1.0,
 }
