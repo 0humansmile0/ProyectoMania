@@ -26,14 +26,14 @@ function Initialize() {
 	moveD = 0;
 
 	coyote_time = 1;
-	coyote_time_max = 5;
+	coyote_time_max = 4;
 	
 	enum DASH_DIR {
 		NONE,
 		LEFT,
 		RIGHT
 	}
-	dash_tap_frames = 10;
+	dash_tap_frames = 11;
 	dash_tap_timer = 0;
 	dash_last_direction = DASH_DIR.NONE;
 	dash_is_dashing = false;
@@ -53,11 +53,11 @@ function OnGround() {
 }
 
 function Keys() {
-	moveL = keyboard_check(vk_left)
-	moveR = keyboard_check(vk_right)
-	moveJ = keyboard_check(vk_up)
-	moveD = keyboard_check(vk_down)
-	moveB = keyboard_check_pressed(ord("R"));
+	moveL = keyboard_check(vk_left) || keyboard_check(ord("A"))
+	moveR = keyboard_check(vk_right) || keyboard_check(ord("D"))
+	moveJ = keyboard_check(vk_up) || keyboard_check(ord("W"))
+	moveD = keyboard_check(vk_down) || keyboard_check(ord("S"))
+	moveB = keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("R"))
 }
 
 function Moving() {

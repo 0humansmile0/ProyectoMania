@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_fire_a1",
-    "path":"sprites/spr_fire_a1/spr_fire_a1.yy",
+    "name":"spr_fire_a2",
+    "path":"sprites/spr_fire_a2/spr_fire_a2.yy",
   },
   "spriteMaskId":{
     "name":"spr_hitbox_32",

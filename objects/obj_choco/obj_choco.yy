@@ -8,8 +8,8 @@
   "name":"obj_choco",
   "overriddenProperties":[],
   "parent":{
-    "name":"Alive",
-    "path":"folders/Main/Mania Game/Obstacles/Alive.yy",
+    "name":"Obstacles",
+    "path":"folders/Main/Mania Game/Obstacles.yy",
   },
   "parentObjectId":null,
   "persistent":false,

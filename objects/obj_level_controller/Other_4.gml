@@ -9,10 +9,20 @@ switch (target_room) {
 		audio_play_sound(mus_w1_area2,0,true);
 	} break;
 	
+	case lvl_w1_area3: {
+		audio_stop_all();
+		audio_play_sound(mus_w1_area3,0,true);
+	} break;
+	
+	case lvl_w1_area4: {
+		audio_stop_all();
+		audio_play_sound(mus_w1_area4,0,true);
+	} break;
+	
 	case mn_0: {
 		audio_stop_all();
-		audio_play_sound(mus_mania,0,true);
-		audio_sound_gain(mus_mania,0);
-		audio_sound_gain(mus_mania,0.75,7777);
+		//audio_play_sound(mus_mania,0,true);
+		//audio_sound_gain(mus_mania,0);
+		//audio_sound_gain(mus_mania,0.75,7777);
 	} break;
 }

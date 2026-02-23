@@ -44,8 +44,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"Area 1",
-    "path":"folders/Main/Mania Game/Sprites/W1/Area 1.yy",
+    "name":"W1",
+    "path":"folders/Main/Mania Game/Sprites/W1.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

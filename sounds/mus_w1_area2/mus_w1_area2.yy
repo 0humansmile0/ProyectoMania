@@ -6,11 +6,11 @@
     "path":"audiogroups/audiogroup_default",
   },
   "bitDepth":1,
-  "channelFormat":0,
+  "channelFormat":1,
   "compression":1,
-  "compressionQuality":7,
+  "compressionQuality":6,
   "conversionMode":0,
-  "duration":202.57959,
+  "duration":52.344013,
   "exportDir":"",
   "name":"mus_w1_area2",
   "parent":{
@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"mus_w1_area2.mp3",
-  "volume":1.0,
+  "volume":0.42,
 }
