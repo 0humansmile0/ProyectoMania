@@ -1,7 +1,9 @@
 {
   "$GMObject":"",
   "%Name":"obj_solid",
-  "eventList":[],
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":73,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
   "name":"obj_solid",
   "overriddenProperties":[],
@@ -24,15 +26,18 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v2","%Name":"deactivation_id","filters":[],"listItems":[],"multiselect":false,"name":"deactivation_id","rangeEnabled":true,"rangeMax":10.0,"rangeMin":1.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"deactivation_id","filters":[],"listItems":[],"multiselect":false,"name":"deactivation_id","rangeEnabled":true,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
-  "solid":false,
+  "solid":true,
   "spriteId":{
+    "name":"spr_wall_a2",
+    "path":"sprites/spr_wall_a2/spr_wall_a2.yy",
+  },
+  "spriteMaskId":{
     "name":"spr_mask1_32",
     "path":"sprites/spr_mask1_32/spr_mask1_32.yy",
   },
-  "spriteMaskId":null,
   "visible":true,
 }

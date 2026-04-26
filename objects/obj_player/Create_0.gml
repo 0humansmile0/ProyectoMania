@@ -1,6 +1,7 @@
-#macro SOLID_INTERFACE [layer_tilemap_get_id("Solid"), obj_solid]
+#macro SOLID_INTERFACE [obj_solid,obj_beg,obj_exp]
+//[layer_tilemap_get_id("Solid"), obj_solid]
 #macro OBSTACLE_INTERFACE obj_alive
-#macro hunger_max 128
+#macro point_max 128
 //DONE: make double tap behaviour to "dash" (for older map compatibility)
 
 function Initialize() {
@@ -16,6 +17,7 @@ function Initialize() {
 	x_start = x;
 	y_start = y;
 	hunger_start = hunger;
+	greed_start = greed;
 
 	mspd = 3;
 	jspd = 9;
@@ -24,6 +26,9 @@ function Initialize() {
 	moveR = 0;
 	moveJ = 0;
 	moveD = 0;
+	
+	double_jump = 1;
+	double_allowed = true;
 
 	coyote_time = 1;
 	coyote_time_max = 4;
@@ -40,10 +45,19 @@ function Initialize() {
 	dash_move = 0;
 	dash_duration = 16;
 	dash_px = 32;
+	
+	layer_set_visible("Background",true)
+	instance_deactivate_object(obj_beg);
+	instance_deactivate_object(obj_bg_beg);
+	instance_activate_object(obj_exp);
+	character_set_player(PLAYERS.Explorer);
 }
 
 function Update() {
-	window_set_caption(string("tengo el {0}% de los chocos, he fallado {1} veces", (hunger/hunger_max)*100, attempts));
+	switch(CHARACTER.references.current_player) {
+		case PLAYERS.Begsalon: window_set_caption(string("tengo el {0}% de los diamantes, he muerto {1} veces", (greed/point_max)*100, attempts)); break;
+		case PLAYERS.Explorer: window_set_caption(string("tengo el {0}% de los chocos, he fallado {1} veces", (hunger/point_max)*100, attempts)); break;
+	}
 }
 
 function OnGround() {
@@ -55,12 +69,17 @@ function OnGround() {
 function Keys() {
 	moveL = keyboard_check(vk_left) || keyboard_check(ord("A"))
 	moveR = keyboard_check(vk_right) || keyboard_check(ord("D"))
-	moveJ = keyboard_check(vk_up) || keyboard_check(ord("W"))
+	moveJ = keyboard_check(vk_up) || keyboard_check(ord("W")) || keyboard_check(vk_space)
+	moveJp = keyboard_check_pressed(vk_up) || keyboard_check_pressed(ord("W")) || keyboard_check_pressed(vk_space)
 	moveD = keyboard_check(vk_down) || keyboard_check(ord("S"))
-	moveB = keyboard_check_pressed(vk_enter) || keyboard_check_pressed(ord("R"))
+	moveB = keyboard_check_pressed(vk_backspace)
+	moveS = keyboard_check_pressed(ord("R"))
+	moveU = keyboard_check(vk_shift);
 }
 
 function Moving() {
+	mspd = 3;
+	if CHARACTER.references.current_player == PLAYERS.Begsalon mspd = 3 + (moveU*1.5);
 	hsp = ((moveR - moveL) * mspd);
 	if moveD {
 		vsp += grav;
@@ -75,12 +94,24 @@ function Coyote() {
 	}
 	
 	if OnGround() {
+		if CHARACTER.references.current_player == PLAYERS.Explorer {
+			double_jump = 1;
+			double_allowed = true;
+		}
+		jspd = 9;
 		coyote_time = coyote_time_max;
 	}
 }
 
 function Jumping() {
 	//Jumping
+	if moveJp and double_jump > 0 and double_allowed and !OnGround() and CHARACTER.references.current_player == PLAYERS.Explorer {
+		coyote_time = coyote_time_max;
+		double_allowed = false;
+		double_jump--;
+		jspd = 6;
+	}
+	
 	if (moveJ > 0 && coyote_time > 0) {
 		coyote_time = 0;
 		vsp = moveJ * -jspd;
@@ -132,7 +163,7 @@ function DashMechanic() {
 	if (dash_tap_timer > 0) dash_tap_timer--;
 	if (dash_duration > 0) dash_duration--;
 	
-	if (keyboard_check_pressed(vk_right)) {
+	if (keyboard_check_pressed(vk_right) || keyboard_check_pressed(ord("D")) ) {
 		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.RIGHT) and (dash_duration == 0 && !place_meeting(x+dash_px+mspd,y,SOLID_INTERFACE)) {
 			x+=dash_px;
 			x=round(x/dash_px)*dash_px;
@@ -143,7 +174,7 @@ function DashMechanic() {
 		dash_last_direction = DASH_DIR.RIGHT;
 	}
 	
-	if (keyboard_check_pressed(vk_left)) {
+	if (keyboard_check_pressed(vk_left) || keyboard_check_pressed(ord("A")) ) {
 		if (dash_tap_timer > 0 && dash_last_direction == DASH_DIR.LEFT) and (dash_duration == 0 && !place_meeting(x-dash_px+mspd,y,SOLID_INTERFACE)) {
 			x-=dash_px;
 			x=round(x/dash_px)*dash_px;
@@ -157,14 +188,11 @@ function DashMechanic() {
 
 function ObstacleHandling() {
 	if (place_meeting(x,y,OBSTACLE_INTERFACE)) or (moveB) or (y > room_height + 48)  {
+		room_restart();
 		attempts++;
-		x = x_start;
-		y = y_start;
+		room_attempts++;
 		hunger = hunger_start;
-		with obj_choco {
-			visible = true;
-		}
-		audio_play_sound(snd_lose,0,false);
+		greed = greed_start;
 		Update();
 		//DONE: play sound for death
 	}
@@ -173,9 +201,9 @@ function ObstacleHandling() {
 function SpriteHandling() {
 	if (hsp_final != 0) {
 		if (vsp_final == 0) {
-			sprite_index = spr_explorer_walk;
+			sprite_index = CHARACTER.sprites.walk;
 		} else {
-			sprite_index = spr_explorer_jump;
+			sprite_index = CHARACTER.sprites.jump;
 		}
 		
 		if hsp_final > 0 {
@@ -183,15 +211,45 @@ function SpriteHandling() {
 		} else image_xscale = -1;
 	} else {
 		if (vsp_final == 0) {
-			sprite_index = spr_explorer_stand;
+			sprite_index = CHARACTER.sprites.stand;
 		} else {
-			sprite_index = spr_explorer_jump;
+			sprite_index = CHARACTER.sprites.front;
 		}
 	}
 	
-	image_speed = d(1);
+	image_speed = d(mspd/3);
 	
 	depth = -9999999;
+}
+
+function Switch() {
+	if moveS {
+		switch (CHARACTER.references.current_player) {
+			case PLAYERS.Explorer: {
+				if !place_meeting(x,y,obj_bg_exp) break;
+				layer_set_visible("Background",false)
+				instance_deactivate_object(obj_exp);
+				instance_deactivate_object(obj_bg_exp);
+				instance_activate_object(obj_beg);
+				instance_activate_object(obj_bg_beg);
+				mask_index = spr_beg_mask;
+				character_set_player(PLAYERS.Begsalon); break;
+			}
+		
+			case PLAYERS.Begsalon: {
+				if !place_meeting(x,y,obj_bg_beg) break;
+				layer_set_visible("Background",true)
+				instance_deactivate_object(obj_beg);
+				instance_deactivate_object(obj_bg_beg);
+				instance_activate_object(obj_exp);
+				instance_activate_object(obj_bg_exp);
+				mask_index = spr_explorer_mask;
+				character_set_player(PLAYERS.Explorer); break;
+			}
+		}
+		Update();
+	}
+	
 }
 
 Initialize();

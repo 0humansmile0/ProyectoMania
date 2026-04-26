@@ -28,8 +28,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_mask2_32",
-    "path":"sprites/spr_mask2_32/spr_mask2_32.yy",
+    "name":"spr_mask4_33",
+    "path":"sprites/spr_mask4_33/spr_mask4_33.yy",
   },
   "spriteMaskId":{
     "name":"spr_mask1_32",

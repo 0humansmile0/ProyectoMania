@@ -8,3 +8,4 @@ FuckFractions();
 FinalMove();
 ObstacleHandling();
 SpriteHandling();
+Switch();

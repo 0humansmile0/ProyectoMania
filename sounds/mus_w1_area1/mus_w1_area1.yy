@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"mus_w1_area1.mp3",
-  "volume":1.0,
+  "volume":0.35,
 }

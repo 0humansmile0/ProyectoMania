@@ -10,7 +10,7 @@
   "compression":1,
   "compressionQuality":6,
   "conversionMode":0,
-  "duration":47.70975,
+  "duration":71.76,
   "exportDir":"",
   "name":"mus_w1_area4",
   "parent":{
@@ -22,5 +22,5 @@
   "resourceVersion":"2.0",
   "sampleRate":44100,
   "soundFile":"mus_w1_area4.mp3",
-  "volume":1.0,
+  "volume":0.5,
 }

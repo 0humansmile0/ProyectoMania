@@ -5,4 +5,5 @@ function transition_room(_room_id) {
 		target_room = _room_id;
 		alarm[2] = 1;
 	}
+	room_attempts = 0;
 }
